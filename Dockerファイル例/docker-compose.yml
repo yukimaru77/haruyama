@@ -1,0 +1,24 @@
+# docker-compose.ymlファイル
+version: '3'  # Docker Composeのバージョン
+
+services:  # サービスの定義
+  jupyterlab:  # サービス名
+    image: jupyterlab-img  # 使用するイメージ名
+    container_name: jupyterlab  # コンテナ名
+    working_dir: /work  # コンテナ内の作業ディレクトリ
+    volumes:  # ボリュームのマウント設定
+      - ./work:/work  # ホストの./workディレクトリをコンテナの/workディレクトリにマウント
+    ports:  # ポートのマッピング
+      - "8888:8888"  # ホストの8888ポートをコンテナの8888ポートにマッピング
+    command:  # 実行するコマンド
+      - jupyter-lab  # JupyterLabを起動
+      - --ip=0.0.0.0  # すべてのIPアドレスからアクセスを許可
+      - --allow-root  # rootユーザーとして実行を許可
+    deploy:  # デプロイ設定
+      resources:  # リソースの設定
+        reservations:  # 予約リソースの設定
+          devices:  # デバイスの設定
+            - driver: nvidia  # NVIDIAドライバー
+              count: all  # すべてのGPUを使用
+              capabilities: [gpu]  # GPUの機能を有効化
+
